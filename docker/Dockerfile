@@ -13,11 +13,17 @@ COPY ../Pipfile ../Pipfile.lock ./
 # Install dependencies in a virtual environment
 RUN pipenv install --deploy --ignore-pipfile
 
+# Copy your main FastAPI application entrypoint
+COPY ../main.py ./main.py
+
 # Copy your application code
 COPY ../api ./api
+
+# Copy your application code
+COPY ../models ./models
 
 # Expose the port the app runs on
 EXPOSE 80
 
 # Run the application using Pipenv in a virtual environment
-CMD ["pipenv", "run", "uvicorn", "api.nfc_reader:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["pipenv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]

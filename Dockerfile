@@ -8,19 +8,19 @@ WORKDIR /usr/src/app
 RUN pip install pipenv
 
 # Copy the Pipfile and Pipfile.lock into the container at /usr/src/app
-COPY ../Pipfile ../Pipfile.lock ./
+COPY ./Pipfile ./Pipfile.lock ./
 
 # Install dependencies in a virtual environment
 RUN pipenv install --deploy --ignore-pipfile
 
 # Copy your main FastAPI application entrypoint
-COPY ../main.py ./main.py
+COPY ./main.py ./main.py
 
 # Copy your application code
-COPY ../api ./api
+COPY ./api ./api
 
 # Copy your application code
-COPY ../models ./models
+COPY ./models ./models
 
 # Expose the port the app runs on
 EXPOSE 80

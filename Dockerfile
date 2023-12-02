@@ -23,7 +23,7 @@ COPY ./api ./api
 COPY ./models ./models
 
 # Expose the port the app runs on
-EXPOSE 8080
+EXPOSE 80
 
 # Run the application using Pipenv in a virtual environment
-CMD ["pipenv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["pipenv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]

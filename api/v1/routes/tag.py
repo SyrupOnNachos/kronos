@@ -16,6 +16,10 @@ def create_tag(tag_id: int, action: str, db: Session = Depends(get_db)):
     return db_tag
 
 @tag_router.get("/")
-def health_check(db: Session = Depends(get_db)):
+def get_tags(db: Session = Depends(get_db)):
     tags = db.query(Tag).all()
     return tags
+
+@tag_router.get("/health_check")
+def health_check():
+    return {200: "We boogie woogie"}

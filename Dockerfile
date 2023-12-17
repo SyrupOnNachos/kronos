@@ -26,4 +26,4 @@ COPY ./models ./models
 EXPOSE 80
 
 # Run the application using Pipenv in a virtual environment
-CMD ["pipenv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["pipenv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]

@@ -22,4 +22,4 @@ def get_tags(db: Session = Depends(get_db)):
 
 @tag_router.get("/health_check")
 def health_check():
-    return {200: "We boogie woogie"}
+    return {200: "Boogie Oogie in my Woogie"}

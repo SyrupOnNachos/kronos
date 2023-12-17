@@ -2,7 +2,6 @@ from fastapi import FastAPI, Depends, APIRouter
 from sqlalchemy.orm import Session
 from models import get_db
 from models.tag import Tag
-from schemas.tag import CreateTagSchema
 from typing import Optional
 import logging
 

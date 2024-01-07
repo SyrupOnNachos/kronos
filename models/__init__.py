@@ -3,10 +3,16 @@ from sqlalchemy.orm import sessionmaker
 from models.base import Base
 from .tag import Tag
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./kronos.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+user='amazz'
+password='kJrrBPp3ti1q'
+account_identifier='zyalpqw-qh50879'
 
+db_name='kronos'
+schema_name='public'
+snowflake_db = f'snowflake://{user}:{password}@{account_identifier}/{db_name}/{schema_name}'
+
+engine = create_engine(snowflake_db)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Dependency
 def get_db():

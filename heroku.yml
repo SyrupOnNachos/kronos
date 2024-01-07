@@ -1,0 +1,7 @@
+build:
+  docker:
+    web: Dockerfile  # Specifies the Dockerfile for the web service
+
+run:
+  web: pipenv run uvicorn main:app --host 0.0.0.0 --port $PORT --reload
+  # The command to start your web service, using the PORT environment variable provided by Heroku

@@ -24,6 +24,7 @@ def run_tag(tag_id: int, db: Session = Depends(get_db)):
         api_payload = tag.api_payload
         url = api_payload["url"]
         method = api_payload.get("method", "GET")
+        #  TODO: make it so headers and body are passed in to the api only if they exist
         headers = api_payload.get("headers", {})
         body = api_payload.get("body", {})
     except KeyError:

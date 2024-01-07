@@ -6,6 +6,7 @@ WORKDIR /usr/src/app
 
 # Install pipenv
 RUN pip install pipenv
+RUN pip install uvicorn
 
 # Copy the Pipfile and Pipfile.lock into the container at /usr/src/app
 COPY ./Pipfile ./Pipfile.lock ./

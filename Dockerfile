@@ -23,6 +23,9 @@ COPY ./api ./api
 # Copy your application code
 COPY ./models ./models
 
+# Copy dockerfiles
+COPY ./Dockerfile  ./docker-compose.yml ./
+
 # Expose the port the app runs on
 EXPOSE 80
 

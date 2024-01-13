@@ -9,7 +9,7 @@ RUN pip install pipenv
 RUN pip install uvicorn
 
 # Copy the Pipfile and Pipfile.lock into the container at /usr/src/app
-COPY ./Pipfile ./Pipfile.lock requirements.txt ./
+COPY ./Pipfile ./Pipfile.lock ./requirements.txt ./
 
 # Install dependencies in a virtual environment
 RUN pipenv install --deploy --ignore-pipfile

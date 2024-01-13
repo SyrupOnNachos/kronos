@@ -4,15 +4,11 @@ FROM python:3.11
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Install pipenv
-RUN pip install pipenv
-RUN pip install uvicorn
 
 # Copy the Pipfile and Pipfile.lock into the container at /usr/src/app
 COPY ./Pipfile ./Pipfile.lock ./requirements.txt ./
 
-# Install dependencies in a virtual environment
-RUN pipenv install --deploy --ignore-pipfile
+RUN pip install --no-cache-dir --upgrade -r ./requirements.txt
 
 # Copy your main FastAPI application entrypoint
 COPY ./main.py ./main.py
@@ -27,4 +23,4 @@ COPY ./models ./models
 EXPOSE $PORT
 
 # Run the application using Pipenv in a virtual environment
-CMD ["pipenv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "$PORT"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "$PORT"]

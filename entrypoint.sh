@@ -1,5 +1,5 @@
 #!/bin/bash
-ENV=${ENV:-qa}
+ENV=${ENV:-local}
 if [ "$ENV" == "local" ]
 then
     pipenv run uvicorn main:app --reload --port 80 --host 0.0.0.0

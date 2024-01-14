@@ -30,6 +30,6 @@ def run_tag(tag_alias: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Malformed API payload")
 
     # Making the API request
-    logging.info(f"Runner tag {tag_alias} - Response: {response.status_code} {response.text}")
     response = requests.request(method, url, data=body)
+    logging.info(f"Runner tag {tag_alias} - Response: {response.status_code} {response.text}")
     return response.text

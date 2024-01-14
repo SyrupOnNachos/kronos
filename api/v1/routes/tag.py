@@ -11,11 +11,10 @@ app = FastAPI()
 tag_router = APIRouter(prefix="/tags", tags=["tags"])
 
 @tag_router.post("/")
-def create_tag(tag_id: int, api_payload: dict, description: Optional[str] = None, db: Session = Depends(get_db)):
-    logging.info(f"Input params: tag_id={tag_id}, api_payload={api_payload}, description={description}")
-    print(f"Input params: tag_id={tag_id}, api_payload={api_payload}, description={description}")
+def create_tag(tag_alias: str, api_payload: dict, description: Optional[str] = None, db: Session = Depends(get_db)):
+    # TODO: add unique name validation
     api_payload_json = json.dumps(api_payload)
-    db_tag = Tag(tag_id=tag_id, api_payload=api_payload_json, description=description)
+    db_tag = Tag(tag_alias=tag_alias, api_payload=api_payload_json, description=description)
 
     db.add(db_tag)
     db.commit()
@@ -25,6 +24,8 @@ def create_tag(tag_id: int, api_payload: dict, description: Optional[str] = None
 @tag_router.get("/")
 def get_tags(db: Session = Depends(get_db)):
     tags = db.query(Tag).all()
+    for tag in tags:
+        tag.api_payload = json.loads(tag.api_payload) if tag.api_payload else None
     return tags
 
 @tag_router.get("/health_check")

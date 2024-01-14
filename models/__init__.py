@@ -1,15 +1,18 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models.base import Base
-from .tag import Tag
+from dotenv import load_dotenv
+import os
 
-user='amazz'
-password='kJrrBPp3ti1q'
-account_identifier='zyalpqw-qh50879'
+load_dotenv()
 
-db_name='kronos'
-schema_name='public'
-snowflake_db = f'snowflake://{user}:{password}@{account_identifier}/{db_name}/{schema_name}'
+USER=os.getenv('SNOWFLAKE_USERNAME')
+PASSWORD=os.getenv('SNOWFLAKE_PASSWORD')
+ACCOUNT_ID=os.getenv('SNOWFLAKE_ACCOUNT_ID')
+DB_NAME=os.getenv('SNOWFLAKE_DB_NAME')
+SCHEMA_NAME=os.getenv('SNOWFLAKE_SCHEMA_NAME')
+
+snowflake_db = f'snowflake://{USER}:{PASSWORD}@{ACCOUNT_ID}/{DB_NAME}/{SCHEMA_NAME}'
 
 engine = create_engine(snowflake_db)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

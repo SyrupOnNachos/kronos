@@ -1,11 +1,13 @@
-from fastapi import FastAPI, Depends, APIRouter, HTTPException
+import json
+import logging
+
+import requests
+from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
+
+from api.v1.schema.request.discord_message import action_type_to_class
 from models import get_db
 from models.tag import Tag
-import requests
-import logging
-import json
-from api.v1.schema.request.discord_message import action_type_to_class
 
 app = FastAPI()
 
@@ -31,7 +33,9 @@ def run_tag(tag_alias: str, db: Session = Depends(get_db)):
                 action_class = action_class(**action)
                 break
         while action_class:
-            response[action_class.name] = action_class.process_action(tag_alias)
+            response[action_class.name] = action_class.process_action(
+                tag_alias=tag_alias, data=response
+            )
             if action_class.next_action:
                 next_action = next(
                     (
@@ -50,5 +54,5 @@ def run_tag(tag_alias: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Malformed API payload")
 
     # Making the API request
- 
+
     return response

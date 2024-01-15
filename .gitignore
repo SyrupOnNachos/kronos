@@ -163,4 +163,7 @@ cython_debug/
 # Alembic Files
 *.pyc
 
+# VS Code
+.vscode/*
+
 deleteme.json

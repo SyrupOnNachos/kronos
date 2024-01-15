@@ -5,6 +5,7 @@ services:
       context: ./
       dockerfile: ./Dockerfile
     ports:
+      - "5678:5678"
       - "80:80"
     volumes:
       - .:/usr/src/app

@@ -4,7 +4,6 @@ FROM python:3.11
 WORKDIR /usr/src/app
 # Install pipenv
 RUN pip install pipenv
-RUN pip install uvicorn
 
 # Copy the Pipfile and Pipfile.lock into the container at /usr/src/app
 COPY ./Pipfile ./Pipfile.lock ./
@@ -16,7 +15,6 @@ COPY ./main.py ./main.py
 COPY ./api ./api
 COPY ./models ./models
 COPY entrypoint.sh .
-
 
 RUN chmod a+x /usr/src/app/entrypoint.sh
 ENTRYPOINT [ "/usr/src/app/entrypoint.sh" ]

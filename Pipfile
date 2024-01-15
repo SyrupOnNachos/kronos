@@ -12,6 +12,7 @@ alembic = "*"
 pydantic = "*"
 snowflake-sqlalchemy = "1.5.1"
 python-dotenv = "*"
+debugpy = "*"
 
 [dev-packages]
 

@@ -6,7 +6,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends, FastAPI
 from sqlalchemy.orm import Session
 
-from api.v1.schema.request.discord_message import ActionScript
+from api.v1.schema.request.action_script import ActionScript
 from models import get_db
 from models.tag import Tag
 

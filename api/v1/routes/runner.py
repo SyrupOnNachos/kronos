@@ -5,7 +5,7 @@ import requests
 from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
-from api.v1.schema.request.discord_message import action_type_to_class
+from api.v1.schema.request.action_script import action_type_to_class
 from models import get_db
 from models.tag import Tag
 

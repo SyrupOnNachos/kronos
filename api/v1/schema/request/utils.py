@@ -1,45 +1,9 @@
 import calendar
-import logging
 from datetime import datetime, timedelta
-from string import Template
-from typing import List, Optional, Union
+from enum import Enum
+from typing import Optional
 
-from pydantic import BaseModel
-from requests import request
-
-
-class Action(BaseModel):
-    name: str  # Name of the action block
-    next_action: Optional[str] = None  # Name of the next action that should be run
-
-
-class DiscordMessage(Action):
-    message: str
-    webhook_id: int
-    webhook_token: str
-    username: str
-    depends_on: Optional[str] = None  # This should be a previous action finder function
-    type: Optional[str] = "disc_message"
-
-    def process_action(self, **kwargs):
-        logging.info(f"Sending discord api call")
-        tag_alias = kwargs["tag_alias"]
-        message = self.message
-
-        if self.depends_on:
-            data = kwargs["data"][f"{self.depends_on}"]
-            message = Template(message)
-            message = message.substitute(data)
-
-        response = request(
-            "POST",
-            f"https://discordapp.com/api/webhooks/{self.webhook_id}/{self.webhook_token}",
-            json={"content": message, "username": self.username},
-        )
-        logging.info(
-            f"Runner tag {tag_alias} - Response: {response.status_code} {response.text}"
-        )
-        return response.status_code
+from .actions import Action
 
 
 class TimeCalculate(Action):
@@ -80,9 +44,5 @@ class TimeCalculate(Action):
         return {"days": days, "hours": hours, "minutes": minutes, "seconds": seconds}
 
 
-action_type_to_class = {"disc_message": DiscordMessage, "time_calculate": TimeCalculate}
-
-
-class ActionScript(BaseModel):
-    actions: List[Union[DiscordMessage, TimeCalculate]]
-    starting_action: str  # Name of the action that starts the sequence
+class Service(Enum):
+    spotify = "Spotify"

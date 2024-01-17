@@ -1,12 +1,11 @@
 import json
-import logging
 from http.client import HTTPException
 from typing import Optional
 
 from fastapi import APIRouter, Depends, FastAPI
 from sqlalchemy.orm import Session
 
-from api.v1.schema.request.discord_message import ActionScript
+from api.v1.schema.request.action_script import ActionScript
 from models import get_db
 from models.tag import Tag
 
@@ -18,17 +17,16 @@ tag_router = APIRouter(prefix="/tags", tags=["tags"])
 @tag_router.post("/")
 def create_tag(
     tag_alias: str,
-    api_payload: ActionScript,
+    action_script: ActionScript,
     description: Optional[str] = None,
     db: Session = Depends(get_db),
 ):
-    # TODO: add unique name validation
     tag = db.query(Tag).filter(Tag.tag_alias == tag_alias).first()
     if tag:
         raise HTTPException(status_code=400, detail="Tag alias already exists")
-    api_payload_json = api_payload.json()
+    action_script_json = action_script.json()
     tag = Tag(
-        tag_alias=tag_alias, api_payload=api_payload_json, description=description
+        tag_alias=tag_alias, action_script=action_script_json, description=description
     )
 
     db.add(tag)
@@ -45,9 +43,9 @@ def update_tag(tag_id: str, tag_data: dict, db: Session = Depends(get_db)):
 
     tag.tag_alias = tag_data.get("tag_alias", tag.tag_alias)
     tag.description = tag_data.get("description", tag.description)
-    tag_api_payload = tag_data.get("api_payload")
-    if tag_api_payload:
-        tag.api_payload = json.dumps(tag_api_payload)
+    tag_action_script = tag_data.get("action_script")
+    if tag_action_script:
+        tag.action_script = json.dumps(tag_action_script)
 
     db.add(tag)
     db.commit()
@@ -56,13 +54,18 @@ def update_tag(tag_id: str, tag_data: dict, db: Session = Depends(get_db)):
 
 
 @tag_router.get("/")
-def get_tags(db: Session = Depends(get_db)):
-    tags = db.query(Tag).all()
+def get_tags(tag_alias: Optional[str] = None, db: Session = Depends(get_db)):
+    if tag_alias:
+        search_pattern = f"%{tag_alias}%"
+        tags = db.query(Tag).filter(Tag.tag_alias.ilike(search_pattern)).all()
+    else:
+        tags = db.query(Tag).all()
     for tag in tags:
-        tag.api_payload = json.loads(tag.api_payload) if tag.api_payload else None
+        tag.action_script = json.loads(tag.action_script) if tag.action_script else None
     return tags
 
 
+# TODO: move the health check to a higher url and check for snowflake connection
 @tag_router.get("/health_check")
 def health_check():
     return {200: "Boogie Oogie in my Woogie"}

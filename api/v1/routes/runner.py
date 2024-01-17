@@ -5,7 +5,7 @@ import requests
 from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
-from api.v1.schema.request.discord_message import action_type_to_class
+from api.v1.schema.request.action_script import action_type_to_class
 from models import get_db
 from models.tag import Tag
 
@@ -22,13 +22,13 @@ def run_tag(tag_alias: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Tag not found")
     # Extracting the components of the API request from the payload
     try:
-        api_payload = json.loads(tag.api_payload)
+        action_script = json.loads(tag.action_script)
 
         response = {}
 
         action_class = None
-        for action in api_payload["actions"]:
-            if action["name"] == api_payload["starting_action"]:
+        for action in action_script["actions"]:
+            if action["name"] == action_script["starting_action"]:
                 action_class = action_type_to_class[action["type"]]
                 action_class = action_class(**action)
                 break
@@ -40,7 +40,7 @@ def run_tag(tag_alias: str, db: Session = Depends(get_db)):
                 next_action = next(
                     (
                         action
-                        for action in api_payload["actions"]
+                        for action in action_script["actions"]
                         if action["name"] == action_class.next_action
                     ),
                     None,

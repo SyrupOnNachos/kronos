@@ -1,5 +1,6 @@
 import calendar
 from datetime import datetime, timedelta
+from enum import Enum
 from typing import Optional
 
 from .actions import Action
@@ -41,3 +42,7 @@ class TimeCalculate(Action):
         minutes, seconds = divmod(remainder, 60)
 
         return {"days": days, "hours": hours, "minutes": minutes, "seconds": seconds}
+
+
+class Service(Enum):
+    spotify = "Spotify"

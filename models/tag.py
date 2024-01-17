@@ -1,12 +1,16 @@
-from sqlalchemy import Column, String
-from models.base import Base
 import uuid
+from datetime import datetime
+
+from sqlalchemy import Column, DateTime, String
+
+from models.base import Base
+
 
 class Tag(Base):
     __tablename__ = "tags"
-    # TODO: rename api_payload to action_payload
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     tag_alias = Column(String(256), nullable=False)
     description = Column(String)
-    api_payload = Column(String, nullable=False)
+    action_script = Column(String, nullable=False)
+    created_on = Column(DateTime, default=datetime.utcnow)

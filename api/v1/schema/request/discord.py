@@ -1,10 +1,10 @@
-
 import logging
 from string import Template
 from typing import Optional
 
-from .actions import Action
 from requests import request
+
+from .actions import Action
 
 
 class DiscordMessage(Action):
@@ -12,7 +12,6 @@ class DiscordMessage(Action):
     webhook_id: int
     webhook_token: str
     username: str
-    depends_on: Optional[str] = None  # This should be a previous action finder function
     type: Optional[str] = "disc_message"
 
     def process_action(self, **kwargs):
@@ -20,8 +19,9 @@ class DiscordMessage(Action):
         tag_alias = kwargs["tag_alias"]
         message = self.message
 
-        if self.depends_on:
-            data = kwargs["data"][f"{self.depends_on}"]
+        data = self.get_data()
+
+        if data:
             message = Template(message)
             message = message.substitute(data)
 

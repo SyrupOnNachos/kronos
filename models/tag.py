@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, String
+from sqlalchemy import Column, DateTime, ForeignKey, String
 
 from models.base import Base
 
@@ -13,4 +13,5 @@ class Tag(Base):
     tag_alias = Column(String(256), nullable=False)
     description = Column(String)
     action_script = Column(String, nullable=False)
-    created_on = Column(DateTime, default=datetime.utcnow)
+    created_on = Column(DateTime(timezone=True), default=datetime.utcnow)
+    user_id = Column(String(36), ForeignKey("users.id"))

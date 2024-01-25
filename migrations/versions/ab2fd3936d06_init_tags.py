@@ -27,7 +27,13 @@ def upgrade() -> None:
         # If the table does not exist, create it with the VARIANT type for api_payload
         op.create_table(
             "tags",
-            sa.Column("id", sa.VARCHAR(length=36), autoincrement=False, nullable=False),
+            sa.Column(
+                "id",
+                sa.VARCHAR(length=36),
+                primary_key=True,
+                autoincrement=False,
+                nullable=False,
+            ),
             sa.Column("tag_alias", sa.VARCHAR(length=256), nullable=False),
             sa.Column("description", sa.VARCHAR(length=16777216), nullable=True),
             sa.Column("api_payload", sa.VARCHAR(length=16777216), nullable=False),

@@ -13,6 +13,7 @@ pydantic = "*"
 snowflake-sqlalchemy = "1.5.1"
 python-dotenv = "*"
 debugpy = "*"
+passlib = "*"
 
 [dev-packages]
 

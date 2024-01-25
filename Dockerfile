@@ -14,6 +14,7 @@ RUN pipenv install --deploy --ignore-pipfile
 COPY ./main.py ./main.py
 COPY ./api ./api
 COPY ./models ./models
+COPY ./utils ./utils
 COPY entrypoint.sh .
 
 RUN chmod a+x /usr/src/app/entrypoint.sh

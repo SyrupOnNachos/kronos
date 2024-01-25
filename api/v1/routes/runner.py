@@ -1,13 +1,15 @@
 import json
 import logging
 
-import requests
 from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
+from starlette import status
 
+from api.v1.routes.dependencies import get_current_user
 from api.v1.schema.request.action_script import action_type_to_class
 from models import get_db
 from models.tag import Tag
+from models.user import User
 
 app = FastAPI()
 
@@ -15,12 +17,19 @@ runner_router = APIRouter(prefix="/runner", tags=["runners"])
 
 
 @runner_router.get("/{tag_alias}")
-def run_tag(tag_alias: str, db: Session = Depends(get_db)):
+def run_tag(
+    tag_alias: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     logging.info(f"Running tag: {tag_alias}")
-    tag = db.query(Tag).filter(Tag.tag_alias == tag_alias).first()
+    tag = (
+        db.query(Tag)
+        .filter(Tag.tag_alias == tag_alias, Tag.user_id == current_user.id)
+        .first()
+    )
     if not tag:
-        raise HTTPException(status_code=404, detail="Tag not found")
-    # Extracting the components of the API request from the payload
+        raise HTTPException(status_code=404, detail="Tag not found for this user")
     try:
         action_script = json.loads(tag.action_script)
 
@@ -50,9 +59,10 @@ def run_tag(tag_alias: str, db: Session = Depends(get_db)):
             else:
                 break
 
-    except KeyError:
-        raise HTTPException(status_code=400, detail="Malformed API payload")
-
-    # Making the API request
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Malformed API payload - {e}",
+        )
 
     return response

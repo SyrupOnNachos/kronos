@@ -20,10 +20,13 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 @user_router.post("/")
 def create_user(
-    username: str,
-    password: str,
+    body: LoginRequest,
     db: Session = Depends(get_db),
 ):
+    body = body.dict()
+    username = body.get("username")
+    password = body.get("password")
+    
     user = db.query(User).filter(User.username == username).first()
     if user:
         raise HTTPException(
